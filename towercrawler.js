@@ -15,7 +15,7 @@ const contenedorAtaques = document.getElementById('contenedorAtaques')
 
 const sectionVerEscenario = document.getElementById('ver-escenario')
 const escenario = document.getElementById('escenario')
-
+//123
 let personajes = []
 let ataqueJugador = []
 let ataqueEnemigo = []
