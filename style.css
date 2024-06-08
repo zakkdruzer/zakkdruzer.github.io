@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+body{
+    font-family: "MedievalSharp", cursive;
+    background-color: black;
+}
+
+#seleccionar-pj {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.titulo {
+    color:white;
+    font-size: 40px;
+    font-family: "MedievalSharp", cursive;
+    align-items: center;
+}
+
+.subtitulo {
+    color:white;
+    font-size: 30px;
+    align-items: center;
+}
+
+#boton-pj {
+    background-image: url(./assets/boton-select2.png);
+    background-color: transparent;
+    border: transparent;
+    width: 160px;
+    height: 80px;
+    background-size: cover;
+}
+
+#boton-pj:hover {
+    background-image: url(./assets/boton-select2hover.png);
+}
+
+.tarjeta-de-personaje {
+    width: 200px;
+    height: 120px;
+    background: #333A73;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 10px;
+    border: 4px solid #962323;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.tarjeta-de-personaje img {
+    width: 80px;
+  }
