@@ -3,17 +3,60 @@
     <head>
         <meta charset="utf-8" />
         <title>Tower Crawler</title>
-        <link rel="stylesheet" href="./style.css">
+        <link rel="stylesheet" href="./styles.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <section id="seleccionar-pj">
-        <h1 class="titulo">Bienvenido a la aventura 🔥🔥🔥</h1>
-        <h2 class="subtitulo">Primero elige a tu personaje:</h2>
-        <div id='contenedorTarjetas' class="tarjetas">            
-        </div>
-        <button id="boton-pj"></button>
+            <h1 class="titulo">Bienvenido a la aventura 🔥🔥🔥</h1>
+            <h2 class="subtitulo">Primero elige a tu personaje:</h2>
+            <div id='contenedorTarjetas' class="tarjetas">            
+            </div>
+            <button id="boton-pj"></button>
+            <p id="personaje-jugador"></p>
         </section>
+
+        <section id="ver-escenario">
+            <h2 class="subtitulo">Te adentras cada vez mas en la oscuridad...</h2> 
+            <canvas id="escenario"></canvas>
+            <!-- <button onmousedown="moverArriba()">Arriba</button>
+            <div>
+                <button onmousedown="moverIzquierda()">Izquierda</button>
+                <button onmousedown="moverDerecha()">Derecha</button>
+            </div> -->
+        </section>
+
+        <section id="seleccionar-ataque">
+            <h1 class="titulo">Comienza la Batalla!</h1>
+
+            <h2 class="subtitulo">Elige tu ataque:</h2>
+
+            <div id='contenedorAtaques' class="tarjetas-ataques">
+
+            </div>
+
+            <div id="mensajes">
+                <p id="resultado">Mucha suerte</p>
+
+                <section id="reiniciar">
+                    <button id="boton-reiniciar"></button>
+                </section>
+            </div>
+
+            <div class="ataques">
+                <div class="ataques-jugador">
+                    <p id="vidas-jugador">0</p>
+                    <p id="personaje-jugador"></p>
+                    <div id="ataques-del-jugador"></div>
+                </div>
+                <div class="ataques-enemigo">   
+                    <p id="vidas-enemigo">0</p>
+                    <p id="personaje-enemigo"></p>
+                    <div id="ataques-del-enemigo"></div>
+                </div>
+            </div>
+        </section>
+
         <script src="./towercrawler.js"></script>
     </body>
 </html>

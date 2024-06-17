@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+body{
+    font-family: "MedievalSharp", cursive;
+    background-color: black;
+}
+
+#seleccionar-pj {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.titulo {
+    color:white;
+    font-size: 40px;
+    font-family: "MedievalSharp", cursive;
+    align-items: center;
+    margin: -5px;
+}
+
+.subtitulo {
+    margin: 20px;
+    color:white;
+    font-size: 30px;
+    align-items: center;
+}
+
+.tarjetas {
+    display: flex;
+  }
+
+.tarjeta-de-personaje {
+    background-image: url(./assets/crystalball2.png);
+    width: 308px;
+    height: 333px;
+    box-sizing: border-box;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: deepskyblue;
+    background-repeat: no-repeat;
+    text-shadow: 0px -2px 2px mediumblue;
+    flex-direction: column-reverse;
+}
+
+.tarjeta-de-personaje:hover {
+    background-image: url(./assets/crystalball2-hover.png);
+    color:black ;
+    margin: 10px;
+}
+
+#boton-pj {
+    background-image: url(./assets/boton-select2.png);
+    background-color: transparent;
+    border: red;
+    width: 160px;
+    height: 80px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#boton-pj:hover {
+    background-image: url(./assets/boton-select2hover.png);
+}
+
+#boton-reiniciar {
+    background-image: url(./assets/boton-reiniciar.png);
+    background-color: transparent;
+    border: red;
+    width: 160px;
+    height: 80px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#boton-reiniciar:hover {
+    background-image: url(./assets/boton-reiniciar-hover.png);
+}
+
+#ver-escenario {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.tarjeta-de-personaje img {
+    width: 80px;
+}
+
+input {
+    display: none;
+}
+
+input:checked + label {
+    background-image: url(./assets/crystalball2-hover.png);
+    color: black;
+  }
+
+@media (max-width: 560px) {
+    .tarjetas {
+      flex-direction: column;
+    }
+  }
