@@ -27,6 +27,26 @@ body{
     align-items: center;
 }
 
+.subtitulo-ataques {
+    margin: 0px;
+    color:white;
+    font-size: 30px;
+    align-items: center;
+}
+
+.subtitulo-escenario {
+    margin: 0px;
+    color:white;
+    font-size: 30px;
+    align-items: center;
+}
+
+#resultado-mazmorra {
+    margin: 0px;
+    color:white;
+    font-size: 30px;
+}
+
 .tarjetas {
     display: flex;
   }
@@ -86,6 +106,69 @@ body{
     justify-content: center;
 }
 
+#boton-siguiente-mazmorra {
+    background-image: url(./assets/boton-avanzar.png);
+    background-color: transparent;
+    border: red;
+    width: 160px;
+    height: 80px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#boton-siguiente-mazmorra:hover {
+    background-image: url(./assets/boton-avanzar-hover.png);
+}
+
+#boton-magia {
+    background-image: url(./assets/boton-magia.png);
+    background-color: transparent;
+    border: red;
+    width: 80px;
+    height: 80px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#boton-magia:hover {
+    background-image: url(./assets/boton-magia-hover.png);
+}
+
+#boton-espada {
+    background-image: url(./assets/boton-espada.png);
+    background-color: transparent;
+    border: red;
+    width: 80px;
+    height: 80px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#boton-espada:hover {
+    background-image: url(./assets/boton-espada-hover.png);
+}
+
+#boton-daga {
+    background-image: url(./assets/boton-daga.png);
+    background-color: transparent;
+    border: red;
+    width: 80px;
+    height: 80px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#boton-daga:hover {
+    background-image: url(./assets/boton-daga-hover.png);
+}
+
+
+#seleccionar-ataque {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .tarjeta-de-personaje img {
     width: 80px;
 }
@@ -98,6 +181,34 @@ input:checked + label {
     background-image: url(./assets/crystalball2-hover.png);
     color: black;
   }
+
+#mensajes {
+    width: 280px;
+    background: #EEEEEE;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ataques {
+    display: grid;
+    grid-template-columns: 100px 100px;
+    color: white;
+}
+  
+#vidas-jugador, #vidas-enemigo {
+    font-size: 32px;
+    margin-bottom: 0;
+}
+  
+.ataques-jugador, .ataques-enemigo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 @media (max-width: 560px) {
     .tarjetas {

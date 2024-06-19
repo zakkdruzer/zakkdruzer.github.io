@@ -5,6 +5,8 @@ const BotonPersonaje = document.getElementById('boton-pj')
 sectionReiniciar.style.display = 'none'
 
 const sectionSeleccionarPersonaje = document.getElementById('seleccionar-pj')
+const botonSiguienteMazmorra = document.getElementById('boton-siguiente-mazmorra')
+const spanResultadoMazmorra = document.getElementById('resultado-mazmorra')
 const spanPersonajeJugador =  document.getElementById('personaje-jugador')
 const spanPersonajeEnemigo = document.getElementById('personaje-enemigo')
 
@@ -24,6 +26,9 @@ const escenario = document.getElementById('escenario')
 
 let personajes = []
 let enemigos = []
+let posicionActualMazmorra = 0
+let resultadoMazmorra
+let estaEnEnemigo = false
 let ataqueJugador = []
 let ataqueEnemigo = []
 let opcionDePersonajes
@@ -143,7 +148,7 @@ personajes.push(hechicero)
 
 enemigos.push(goblin)
 
-let mazmorra1 = [goblin]
+let mazmorra1 = ['',goblin]
 
 console.log(personajes)
 console.log(enemigos)
@@ -175,11 +180,13 @@ function iniciarJuego(){
 
 function seleccionarPersonajeJugador() {
     sectionSeleccionarPersonaje.style.display = 'none'
+    sectionSeleccionarAtaque.style.display = 'none'
     
     if (inputHechicero.checked) {
         spanPersonajeJugador.innerHTML = inputHechicero.id
         personajeJugador = inputHechicero.id
         console.log('Se selecciono hechicero');
+        console.log(spanPersonajeJugador)
     } else if (inputGuerrero.checked) {
         spanPersonajeJugador.innerHTML = inputGuerrero.id
         personajeJugador = inputGuerrero.id
@@ -189,10 +196,13 @@ function seleccionarPersonajeJugador() {
     }
     extraerAtaques(personajeJugador)
     sectionVerEscenario.style.display = 'flex'
-    RecorrerMazmorra() 
+    iniciarMapa() 
 }
 
 function extraerAtaques(personajeJugador) {
+
+    sectionSeleccionarAtaque.style.display = 'none'
+
     console.log('Extrayendo ataques de personaje jugador ', personajeJugador)
     let ataques
     for (let i = 0; i < personajes.length; i++) {
@@ -201,14 +211,27 @@ function extraerAtaques(personajeJugador) {
         }
         console.log('Los ataques del jugador son: ', ataques)
     }
+
     mostrarAtaques(ataques)
 }
 
+function obtenerObjetoPersonaje() {
+    console.log('Se esta obteniendo objeto persona jugador: ', personajeJugador)
+    for (let i = 0; i < personajes.length; i++) {
+        if (personajeJugador === personajes[i].nombre) {
+            return personajes[i]
+        }
+        console.log(personajes[i])
+    }
+}
+
 function mostrarAtaques(ataques) {
+    
     ataques.forEach((ataque) => {
         ataquesPersonaje = `
-        <button id=${ataque.id} class="boton-de-ataque BAtaque">${ataque.nombre}</button>
+        <button id=${ataque.id} class="boton-de-ataque BAtaque"></button>
         `
+        //${ataque.nombre} iba entre medio
         contenedorAtaques.innerHTML += ataquesPersonaje
     })
 
@@ -216,42 +239,118 @@ function mostrarAtaques(ataques) {
      botonEspada = document.getElementById('boton-espada')
      botonDaga = document.getElementById('boton-daga')
      botones = document.querySelectorAll('.BAtaque')
+
 }
 
-function RecorrerMazmorra() {
+function recorrerMazmorra() {
 
-    for (let i = 0; i < mazmorra1.length; i++) {
-        console.log('Se esta recorriendo la mazmorra');
-        if (mazmorra1[i] != '') {
-            console.log('Se ha encontrado enemigo: ', (mazmorra1[i]))
-            enemigoEncontrado = (mazmorra1[i])
-            spanPersonajeEnemigo.innerHTML = enemigoEncontrado.nombre;
-            pintarEnemigo(enemigoEncontrado);
+    sectionSeleccionarAtaque.style.display = 'none'
+
+    //for (let i = 0; i < mazmorra1.length; i++) {
+        
+        if (posicionActualMazmorra < mazmorra1.length) {
+            console.log('Se esta recorriendo la mazmorra')
+            let elementoActual = mazmorra1[posicionActualMazmorra]
+            if (typeof elementoActual === 'object') {
+                seleccionarPersonajeEnemigo(elementoActual)
+                estaEnEnemigo = true;
+                resultadoMazmorra = `<p class="resultado-mazmorra" style="margin: 0px;margin-bottom: 0px;">Has encontrado al enemigo ${elementoActual.nombre}</p>`
+                spanResultadoMazmorra.innerHTML = resultadoMazmorra
+                secuenciaAtaque()
+            } else {
+                console.log('Pasillo vacío, deteniéndose')
+                resultadoMazmorra = `<p class="resultado-mazmorra" style="margin: 0px;margin-bottom: 0px;">Te encuentras en un pasillo vacio...</p>`
+                spanResultadoMazmorra.innerHTML = resultadoMazmorra
+                posicionActualMazmorra++
+                estaEnEnemigo = false
+                //continuarRecorrido()
+            }
+        } else {
+            console.log('Ya has recorrido todas las mazmorras')
+        }
+    //}
+}
+
+function continuarRecorrido() {
+    botonSiguienteMazmorra.style.display = 'block';
+    if (estaEnEnemigo) {
+        secuenciaAtaque();
+        estaEnEnemigo = false;
+    } else {
+        posicionActualMazmorra++;
+        recorrerMazmorra();
+    }
+}
+
+function seleccionarPersonajeEnemigo(enemigo) {
+    console.log('Se selecciono personaje enemigo: ', enemigo)
+    spanPersonajeEnemigo.innerHTML = enemigo.nombre
+    //console.log(spanPersonajeEnemigo)
+    ataquesPersonajeEnemigo = enemigo.ataquesEnemigo
+    personajeEnemigo = enemigo.nombre // Asignar el nombre del enemigo a la variable personajeEnemigo
+    //console.log('Se selecciono personaje enemigo: ', personajeEnemigo)
+    extraerAtaquesEnemigo(personajeEnemigo)
+}
+
+function obtenerObjetoPersonajeEnemigo() {
+    //console.log('Se esta obteniendo objeto persona enemigo: ', personajeEnemigo)
+    for (let i = 0; i < enemigos.length; i++) {
+        if (personajeEnemigo === enemigos[i].nombre) {
+            return enemigos[i]
         }
     }
-iniciarMapa()
-console.log(personajeEnemigo)
+}
+
+function extraerAtaquesEnemigo(personajeEnemigo) {
+    console.log('Extrayendo ataques enemigos de ',personajeEnemigo)
+    let ataquesEnemigo
+    for (let i = 0; i < enemigos.length; i++) {
+        if (personajeEnemigo === enemigos[i].nombre) {
+            ataquesEnemigo = enemigos[i].ataquesEnemigo
+        }
+    }
+    ataquesEnemigo = ataquesPersonajeEnemigo
+    console.log('Los ataques del enemigo son: ', ataquesEnemigo)
+    //ataqueAleatorioEnemigo(personajeEnemigo)
+    //secuenciaAtaque()
+}
+
+function iniciarMapa() {
+    
+    sectionSeleccionarAtaque.style.display = 'none'
+
+    personajeJugadorObjeto = obtenerObjetoPersonaje(personajeJugador)
+    console.log(personajeJugadorObjeto, personajeJugador)
+    
+    intervalo = setInterval(pintarCanvas, 50)
+
+    window.addEventListener('keydown', sePresionoUnaTecla)
+    botonSiguienteMazmorra.addEventListener('click', recorrerMazmorra)
+    //window.addEventListener('keyup', detenerMovimiento)
+    console.log('Se inicio el mapa')
 }
 
 function secuenciaAtaque() {
+
+    botonSiguienteMazmorra.style.display = 'none'
     //console.log('Iniciando secuencia de ataque contra enemigo: ', PersonajeEnemigo)
     botones.forEach((boton) => {
         boton.addEventListener('click', (e) => {
             if (e.target.textContent === '🎇') {
                 ataqueJugador.push('MAGIA')
+                //indexAtaqueJugador = ('MAGIA')
                 console.log(ataqueJugador)
-                boton.style.background = '#112f58'
-                boton.disabled = true   
+                //boton.disabled = true   
             } else if (e.target.textContent === '⚔') {
                 ataqueJugador.push('ESPADA')
+                //indexAtaqueJugador = ('ESPADA')
                 console.log(ataqueJugador)
-                boton.style.background = '#112f58'
-                boton.disabled = true  
+                //boton.disabled = true  
             } else {
                 ataqueJugador.push('DAGA')
+                //indexAtaqueJugador = ('DAGA')
                 console.log(ataqueJugador)
-                boton.style.background = '#112f58'
-                boton.disabled = true  
+                //boton.disabled = true  
             }
             ataqueAleatorioEnemigo()
         })
@@ -265,12 +364,15 @@ function ataqueAleatorioEnemigo() {
     
     if (ataqueAleatorioEnemigo === 0 ) {
         ataqueEnemigo.push('MAGIA')
+        indexAtaqueEnemigo = ('MAGIA')
     } else if (ataqueAleatorioEnemigo === 1 ) {
         ataqueEnemigo.push('ESPADA')
+        indexAtaqueEnemigo = ('ESPADA')
     } else {
         ataqueEnemigo.push('DAGA')
+        indexAtaqueEnemigo = ('DAGA')
     }
-    console.log(ataqueEnemigo)
+    console.log('Ataque aleatorio enemigo elegido: ', ataqueEnemigo)
     iniciarPelea()
 }
 
@@ -286,7 +388,7 @@ function indexAmbosOponente(jugador, enemigo) {
 }
 
 function combate() {
-    //console.log('Se inicio combate con ', PersonajeEnemigo)
+    console.log('Se inicio combate con ', personajeEnemigo)  
 
     for (let index = 0; index < ataqueJugador.length; index++) {
         if(ataqueJugador[index] === ataqueEnemigo[index]) {
@@ -295,35 +397,59 @@ function combate() {
         } else if (ataqueJugador[index] === 'MAGIA' && ataqueEnemigo[index] === 'ESPADA') {
             indexAmbosOponente(index, index)
             crearMensaje("GANASTE")
-            personajeEnemigo.vida--
-            spanVidasEnemigo.innerHTML = personajeEnemigo.vida
+            personajeEnemigoObjeto.vida--
+            spanVidasEnemigo.innerHTML = personajeEnemigoObjeto.vida
         } else if (ataqueJugador[index] ==='ESPADA' && ataqueEnemigo[index] === 'DAGA') {
             indexAmbosOponente(index, index)
             crearMensaje("GANASTE")
-            personajeEnemigo.vida--
-            spanVidasEnemigo.innerHTML = personajeEnemigo.vida--
+            personajeEnemigoObjeto.vida--
+            spanVidasEnemigo.innerHTML = personajeEnemigoObjeto.vida--
         } else if (ataqueJugador[index] === 'DAGA' && ataqueEnemigo[index] === 'MAGIA') {
             indexAmbosOponente(index, index)
             crearMensaje("GANASTE")
-            personajeEnemigo.vida--
-            spanVidasEnemigo.innerHTML = personajeEnemigo.vida--
+            personajeEnemigoObjeto.vida--
+            spanVidasEnemigo.innerHTML = personajeEnemigoObjeto.vida--
         } else {
             indexAmbosOponente(index, index)
             crearMensaje("PERDISTE")
-            personajeJugador.vida--
-            spanVidasJugador.innerHTML = personajeJugador.vida
+            personajeJugadorObjeto.vida--
+            spanVidasJugador.innerHTML = personajeJugadorObjeto.vida
         }
-    }console.log(combate)
-    revisarVidas(personajeEnemigo)
+    }
+    revisarVidas()
 }
 
 function revisarVidas() {
-    //console.log('holiholiii: ', enemigo)
-    if (personajeEnemigo.vida <= 0) {
+
+    ataqueJugador.length = 0
+    ataqueEnemigo.length = 0
+
+    console.log('se esta revisando la vida de: ', personajeJugador, 'y ', personajeEnemigo)
+    console.log('Vida enemigo: ', (personajeEnemigoObjeto.vida))
+    console.log('Vida jugador: ', (personajeJugadorObjeto.vida))
+    
+    // switch ((personajeEnemigoObjeto.vida),(personajeJugadorObjeto.vida)) {
+    //     case ((personajeJugadorObjeto.vida) <= 0) : {
+    //         crearMensajeFinal('Tu vida ha llegado a su fin...')
+    //         };
+            
+    //         break;
+    //     case ((personajeEnemigoObjeto.vida) > 0): {
+    //         secuenciaAtaque()
+    //     }
+    // }
+
+    if (personajeEnemigoObjeto.vida <= 0) {
+        console.log('Vida enemigo: ', (personajeEnemigoObjeto.vida))
+        sectionSeleccionarAtaque.style.display = 'none'
         crearMensajeFinal("Lograste sobrevivir a la batalla!")
     } else if (personajeJugador.vida <= 0) {
+        sectionSeleccionarAtaque.style.display = 'none'
         crearMensajeFinal('Tu vida ha llegado a su fin...')
+    } else if (personajeEnemigo.vida > 0 ){
+        secuenciaAtaque()
     }
+
 }
 
 function crearMensaje(resultado) {
@@ -340,7 +466,7 @@ function crearMensaje(resultado) {
 
 function crearMensajeFinal(resultadoFinal) {
     sectionMensajes.innerHTML = resultadoFinal
-    
+    botonReiniciar.addEventListener('click', reiniciarJuego)
     sectionReiniciar.style.display = 'block'
 }
 
@@ -360,76 +486,17 @@ function sePresionoUnaTecla(event) {
     }
 }
 
-function iniciarMapa() {
-
-    personajeJugadorObjeto = obtenerObjetoPersonaje(personajeJugador)
-    personajeEnemigoObjeto = obtenerObjetoPersonajeEnemigo(personajeEnemigo)
-    console.log(personajeEnemigoObjeto, personajeEnemigo)
-    console.log(personajeJugadorObjeto, personajeJugador)
-    
-    intervalo = setInterval(pintarCanvas, 50)
-    
-    window.addEventListener('keydown', sePresionoUnaTecla)
-    //window.addEventListener('keyup', detenerMovimiento)
-    console.log('Se inicio el mapa')
-}
-
-function obtenerObjetoPersonaje() {
-    console.log('Se esta obteniendo objeto persona jugador: ', personajeJugador)
-    for (let i = 0; i < personajes.length; i++) {
-        if (personajeJugador === personajes[i].nombre) {
-            return personajes[i]
-        }
-        console.log(personajes[i])
-    }
-}
-
-function seleccionarPersonajeEnemigo(enemigo) {
-    console.log('Se selecciono personaje enemigo: ', enemigo)
-    spanPersonajeEnemigo.innerHTML = enemigo.nombre
-    console.log(spanPersonajeEnemigo)
-    ataquesPersonajeEnemigo = enemigo.ataquesEnemigo
-
-    extraerAtaquesEnemigo(enemigo)
-}
-
-function obtenerObjetoPersonajeEnemigo() {
-    console.log('Obteniendo objeto personaje enemigo de: ', personajeEnemigo)
-    for (let i = 0; i < enemigos.length; i++) {
-        if (personajeEnemigo === enemigos[i].nombre) {
-            return enemigos[i]
-        }
-        console.log(enemigos[i])
-    }
-}
-
-function extraerAtaquesEnemigo(personajeEnemigo) {
-    console.log('Extrayendo ataques enemigos de ',personajeEnemigo)
-    let ataquesEnemigo
-    for (let i = 0; i < enemigos.length; i++) {
-        if (personajeEnemigo === enemigos[i].nombre) {
-            ataquesEnemigo = enemigos[i].ataquesEnemigo
-        }
-    }
-    ataquesEnemigo = ataquesPersonajeEnemigo
-    console.log('Los ataques del enemigo son: ', ataquesEnemigo)
-    //ataqueAleatorioEnemigo(personajeEnemigo)
-    secuenciaAtaque()
-}
-
-
-
-
-
 function aleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 function pintarCanvas() {
-    personajeJugadorObjeto.x = personajeJugadorObjeto.x //+ PersonajeJugadorObjeto.velocidadX
-    personajeJugadorObjeto.y = personajeJugadorObjeto.y //+ PersonajeJugadorObjeto.velocidadY
-    // PersonajeEnemigoObjeto.x = PersonajeEnemigoObjeto.x
-    // PersonajeEnemigoObjeto.y = PersonajeEnemigoObjeto.y
+
+    sectionSeleccionarAtaque.style.display = 'none'
+
+    personajeJugadorObjeto.x = personajeJugadorObjeto.x
+    personajeJugadorObjeto.y = personajeJugadorObjeto.y 
+
     lienzo.clearRect(0, 0, escenario.width, escenario.height)
     lienzo.drawImage(
         escenarioBackground,
@@ -439,14 +506,15 @@ function pintarCanvas() {
         escenario.height
     )
     personajeJugadorObjeto.pintarPersonaje()
-    //personajeEnemigo.pintarEnemigo()
-    //if (PersonajeJugadorObjeto.velocidadX !== 0 || PersonajeJugadorObjeto.velocidadY !== 0) {
-    //    revisarColision(hipodogeEnemigo)
-    //    revisarColision(capipepoEnemigo)
-    //    revisarColision(ratigueyaEnemigo)
-    //}
-    sectionSeleccionarAtaque.style.display = 'flex'
-    //seleccionarPersonajeEnemigo(goblin)
+    
+    if (personajeEnemigo != null) {
+        //console.log('se encontro enemigo ', personajeEnemigo)
+        personajeEnemigoObjeto = obtenerObjetoPersonajeEnemigo(personajeEnemigo)
+        personajeEnemigoObjeto.x = personajeEnemigoObjeto.x
+        personajeEnemigoObjeto.y = personajeEnemigoObjeto.y
+        personajeEnemigoObjeto.pintarEnemigo()
+        sectionSeleccionarAtaque.style.display = 'flex'
+    }
 }
 
 function teclaIzq() {
