@@ -7,6 +7,11 @@ sectionReiniciar.style.display = 'none'
 const sectionSeleccionarPersonaje = document.getElementById('seleccionar-pj')
 const botonSiguienteMazmorra = document.getElementById('boton-siguiente-mazmorra')
 const spanResultadoMazmorra = document.getElementById('resultado-mazmorra')
+
+const barrasDeVida = document.getElementById('barras-vidas');
+const barraVidaJugador = document.getElementById('barra-jugador');
+const barraVidaEnemigo = document.getElementById('barra-enemigo');
+
 const spanPersonajeJugador =  document.getElementById('personaje-jugador')
 const spanPersonajeEnemigo = document.getElementById('personaje-enemigo')
 
@@ -116,8 +121,8 @@ class Enemigo {
     }
 }
 
-let hechicero = new Personaje('Hechicero', './assets/mago.png', 10, './assets/magoback.png')
-//let guerrero = new Personaje('Guerrero', './assets/warrior-bruto.png', 10)
+let hechicero = new Personaje('Hechicero', './assets/mago.png', 5, './assets/magoback.png')
+let guerrero = new Personaje('Guerrero', './assets/warrior-bruto-custom2.png', 5, './assets/guerrero-back.png')
 
 let goblin = new Enemigo('Goblin', './assets/enemigos/goblin-1.png', 5)
 
@@ -133,7 +138,7 @@ const GUERRERO_ATAQUES = [
     {nombre: '⚔', id:'boton-espada' },
     {nombre: '🔪', id:'boton-daga' },
 ]
-//guerrero.ataques.push(...GUERRERO_ATAQUES)
+guerrero.ataques.push(...GUERRERO_ATAQUES)
 
 const GOBLIN_ATAQUES = [
     {nombre: '🎇', id:'boton-magia' },
@@ -143,8 +148,8 @@ const GOBLIN_ATAQUES = [
 goblin.ataquesEnemigo.push(...GOBLIN_ATAQUES)
 
 
-personajes.push(hechicero)
-//personajes.push(hechicero,guerrero)
+//personajes.push(hechicero)
+personajes.push(hechicero,guerrero)
 
 enemigos.push(goblin)
 
@@ -157,6 +162,7 @@ console.log(mazmorra1)
 function iniciarJuego(){
  
     sectionSeleccionarAtaque.style.display = 'none'
+    barrasDeVida.style.display = 'none'
     sectionVerEscenario.style.display = 'none'
 
     personajes.forEach((personaje) => {
@@ -172,7 +178,7 @@ function iniciarJuego(){
         inputHechicero = document.getElementById('Hechicero')
         inputGuerrero = document.getElementById('Guerrero')
     })
-    console.log(opcionDePersonajes)
+    //console.log(opcionDePersonajes)
 
     BotonPersonaje.addEventListener('click', seleccionarPersonajeJugador)
     botonReiniciar.addEventListener('click', reiniciarJuego)
@@ -203,15 +209,14 @@ function extraerAtaques(personajeJugador) {
 
     sectionSeleccionarAtaque.style.display = 'none'
 
-    console.log('Extrayendo ataques de personaje jugador ', personajeJugador)
+    console.log('Extrayendo ataques de personaje jugador: ', personajeJugador)
     let ataques
     for (let i = 0; i < personajes.length; i++) {
         if (personajeJugador === personajes[i].nombre) {
             ataques = personajes[i].ataques
         }
-        console.log('Los ataques del jugador son: ', ataques)
     }
-
+    console.log('Los ataques del jugador son: ', ataques)
     mostrarAtaques(ataques)
 }
 
@@ -224,6 +229,17 @@ function obtenerObjetoPersonaje() {
         console.log(personajes[i])
     }
 }
+
+function obtenerVidaMaximaObjetoPersonajeJugador() {
+    console.log('Se esta obteniendo vida maxima objeto persona jugador: ', personajeJugador)
+    for (let i = 0; i < personajes.length; i++) {
+        if (personajeJugador === personajes[i].nombre) {
+            return personajes[i].vida
+        }
+        console.log(personajes[i].vida)
+    }
+}
+
 
 function mostrarAtaques(ataques) {
     
@@ -244,52 +260,49 @@ function mostrarAtaques(ataques) {
 
 function recorrerMazmorra() {
 
-    sectionSeleccionarAtaque.style.display = 'none'
-
-    //for (let i = 0; i < mazmorra1.length; i++) {
+sectionSeleccionarAtaque.style.display = 'none'
         
-        if (posicionActualMazmorra < mazmorra1.length) {
-            console.log('Se esta recorriendo la mazmorra')
-            let elementoActual = mazmorra1[posicionActualMazmorra]
-            if (typeof elementoActual === 'object') {
-                seleccionarPersonajeEnemigo(elementoActual)
-                estaEnEnemigo = true;
-                resultadoMazmorra = `<p class="resultado-mazmorra" style="margin: 0px;margin-bottom: 0px;">Has encontrado al enemigo ${elementoActual.nombre}</p>`
-                spanResultadoMazmorra.innerHTML = resultadoMazmorra
+    if (posicionActualMazmorra < mazmorra1.length) {
+        console.log('Se esta recorriendo la mazmorra')
+        let elementoActual = mazmorra1[posicionActualMazmorra]
+        if (typeof elementoActual === 'object') {
+            seleccionarPersonajeEnemigo(elementoActual)
+            estaEnEnemigo = true;
+            resultadoMazmorra = `<p class="resultado-mazmorra" style="margin: 0px;margin-bottom: 0px;">Has encontrado al enemigo ${elementoActual.nombre}</p>`
+            spanResultadoMazmorra.innerHTML = resultadoMazmorra
+            //spanPersonajeEnemigo.innerHTML = elementoActual.nombre
+            personajeEnemigoObjeto = obtenerObjetoPersonajeEnemigo()
+        
+            if (personajeEnemigoObjeto) {
+                revisarVidas()
                 secuenciaAtaque()
             } else {
-                console.log('Pasillo vacío, deteniéndose')
-                resultadoMazmorra = `<p class="resultado-mazmorra" style="margin: 0px;margin-bottom: 0px;">Te encuentras en un pasillo vacio...</p>`
-                spanResultadoMazmorra.innerHTML = resultadoMazmorra
-                posicionActualMazmorra++
-                estaEnEnemigo = false
-                //continuarRecorrido()
+                console.log('No se pudo obtener el objeto del personaje enemigo')
             }
         } else {
-            console.log('Ya has recorrido todas las mazmorras')
+            console.log('Pasillo vacío, deteniéndose')
+            resultadoMazmorra = `<p class="resultado-mazmorra" style="margin: 0px;margin-bottom: 0px;">Te encuentras en un pasillo vacio...</p>`
+            spanResultadoMazmorra.innerHTML = resultadoMazmorra
+            posicionActualMazmorra++
+            estaEnEnemigo = false
         }
-    //}
-}
-
-function continuarRecorrido() {
-    botonSiguienteMazmorra.style.display = 'block';
-    if (estaEnEnemigo) {
-        secuenciaAtaque();
-        estaEnEnemigo = false;
     } else {
-        posicionActualMazmorra++;
-        recorrerMazmorra();
+        console.log('Ya has recorrido todas las mazmorras')
     }
 }
 
-function seleccionarPersonajeEnemigo(enemigo) {
-    console.log('Se selecciono personaje enemigo: ', enemigo)
-    spanPersonajeEnemigo.innerHTML = enemigo.nombre
+function seleccionarPersonajeEnemigo(elementoActual) {
+    console.log('Se selecciono personaje enemigo: ', elementoActual)
+    personajeEnemigo = elementoActual.nombre
+    console.log('Se ha elegido personaje enemigo: ',personajeEnemigo)
     //console.log(spanPersonajeEnemigo)
-    ataquesPersonajeEnemigo = enemigo.ataquesEnemigo
-    personajeEnemigo = enemigo.nombre // Asignar el nombre del enemigo a la variable personajeEnemigo
+    //ataquesPersonajeEnemigo = enemigo.ataquesEnemigo
+    //personajeEnemigo = enemigo.nombre // Asignar el nombre del enemigo a la variable personajeEnemigo
+    //personajeEnemigoObjeto = enemigo; // Setear personajeEnemigoObjeto
+    //actualizarBarrasVidas(); // Actualiza barras de vida luego de setear al personajeEnemigoObjeto
     //console.log('Se selecciono personaje enemigo: ', personajeEnemigo)
     extraerAtaquesEnemigo(personajeEnemigo)
+    obtenerObjetoPersonajeEnemigo(personajeEnemigo)
 }
 
 function obtenerObjetoPersonajeEnemigo() {
@@ -298,21 +311,35 @@ function obtenerObjetoPersonajeEnemigo() {
         if (personajeEnemigo === enemigos[i].nombre) {
             return enemigos[i]
         }
+        console.log(enemigos[i])
+    }
+    //actualizarBarrasVidas(); // Actualiza barras de vida luego de setear al personajeEnemigoObjeto
+    //secuenciaAtaque()
+}
+
+function obtenerVidaMaximaPersonajeObjetoEnemigo() {
+    console.log('Se esta obteniendo vida maxima objeto personaje enemigo: ', personajeEnemigo)
+    for (let i = 0; i < enemigos.length; i++) {
+        if (personajeEnemigo === enemigos[i].nombre) {
+            return enemigos[i].vida
+        }
+        console.log(enemigos[i].vida)
     }
 }
 
 function extraerAtaquesEnemigo(personajeEnemigo) {
-    console.log('Extrayendo ataques enemigos de ',personajeEnemigo)
+    console.log('Extrayendo ataques enemigos de: ',personajeEnemigo)
     let ataquesEnemigo
     for (let i = 0; i < enemigos.length; i++) {
         if (personajeEnemigo === enemigos[i].nombre) {
             ataquesEnemigo = enemigos[i].ataquesEnemigo
         }
     }
-    ataquesEnemigo = ataquesPersonajeEnemigo
+    //ataquesEnemigo = ataquesPersonajeEnemigo
     console.log('Los ataques del enemigo son: ', ataquesEnemigo)
     //ataqueAleatorioEnemigo(personajeEnemigo)
-    //secuenciaAtaque()
+    //revisarVidas()
+    secuenciaAtaque()
 }
 
 function iniciarMapa() {
@@ -332,24 +359,30 @@ function iniciarMapa() {
 
 function secuenciaAtaque() {
 
+    //revisarVidas()
+
     botonSiguienteMazmorra.style.display = 'none'
-    //console.log('Iniciando secuencia de ataque contra enemigo: ', PersonajeEnemigo)
+    console.log('Iniciando secuencia de ataque contra enemigo: ', personajeEnemigo)
+    barrasDeVida.style.display = 'flex' // muestra barras de vida
+    if (personajeEnemigoObjeto) {
+        actualizarBarrasVidas(); // Actualizar barras de vida solo si hay un enemigo
+    }
     botones.forEach((boton) => {
         boton.addEventListener('click', (e) => {
             if (e.target.textContent === '🎇') {
                 ataqueJugador.push('MAGIA')
-                //indexAtaqueJugador = ('MAGIA')
-                console.log(ataqueJugador)
+                indexAtaqueJugador = ('MAGIA')
+                console.log('Ataque personaje elegido: ',ataqueJugador)
                 //boton.disabled = true   
             } else if (e.target.textContent === '⚔') {
                 ataqueJugador.push('ESPADA')
-                //indexAtaqueJugador = ('ESPADA')
-                console.log(ataqueJugador)
+                indexAtaqueJugador = ('ESPADA')
+                console.log('Ataque personaje elegido: ',ataqueJugador)
                 //boton.disabled = true  
             } else {
                 ataqueJugador.push('DAGA')
-                //indexAtaqueJugador = ('DAGA')
-                console.log(ataqueJugador)
+                indexAtaqueJugador = ('DAGA')
+                console.log('Ataque personaje elegido: ',ataqueJugador)
                 //boton.disabled = true  
             }
             ataqueAleatorioEnemigo()
@@ -359,25 +392,51 @@ function secuenciaAtaque() {
 
 function ataqueAleatorioEnemigo() {
     console.log('Personaje enemigo elegido para ataque aleatorio', personajeEnemigo)
-    console.log('Ataques enemigo', ataquesPersonajeEnemigo);
-    let ataqueAleatorioEnemigo = aleatorio(0,ataquesPersonajeEnemigo.length-1)
+    //console.log('Ataques enemigo', ataquesPersonajeEnemigo);
     
-    if (ataqueAleatorioEnemigo === 0 ) {
+    let ataqueAleatorioEnemigo = aleatorio(0, ataqueEnemigo.length - 1)
+    
+    if (ataqueAleatorioEnemigo === 0) {
         ataqueEnemigo.push('MAGIA')
-        indexAtaqueEnemigo = ('MAGIA')
-    } else if (ataqueAleatorioEnemigo === 1 ) {
+        indexAtaqueEnemigo = 'MAGIA'
+    } else if (ataqueAleatorioEnemigo === 1) {
         ataqueEnemigo.push('ESPADA')
-        indexAtaqueEnemigo = ('ESPADA')
+        indexAtaqueEnemigo = 'ESPADA'
     } else {
         ataqueEnemigo.push('DAGA')
-        indexAtaqueEnemigo = ('DAGA')
+        indexAtaqueEnemigo = 'DAGA'
     }
     console.log('Ataque aleatorio enemigo elegido: ', ataqueEnemigo)
     iniciarPelea()
 }
 
+// function ataqueAleatorioEnemigo() {
+//     console.log('Personaje enemigo elegido para ataque aleatorio', personajeEnemigo)
+//     console.log('Ataques enemigo', ataquesPersonajeEnemigo);
+//     let ataqueAleatorioEnemigo = aleatorio(0,ataquesPersonajeEnemigo.length-1)
+    
+//     if (ataqueAleatorioEnemigo === 0 ) {
+//         ataqueEnemigo.push('MAGIA')
+//         indexAtaqueEnemigo = ('MAGIA')
+//     } else if (ataqueAleatorioEnemigo === 1 ) {
+//         ataqueEnemigo.push('ESPADA')
+//         indexAtaqueEnemigo = ('ESPADA')
+//     } else {
+//         ataqueEnemigo.push('DAGA')
+//         indexAtaqueEnemigo = ('DAGA')
+//     }
+//     console.log('Ataque aleatorio enemigo elegido: ', ataqueEnemigo)
+//     iniciarPelea()
+// }
+
+// function iniciarPelea() {
+//     if (ataqueJugador.length === 1) {
+//         combate()
+//     }
+// }
+
 function iniciarPelea() {
-    if (ataqueJugador.length === 1) {
+    if (ataqueJugador.length === ataqueEnemigo.length) {
         combate()
     }
 }
@@ -390,78 +449,189 @@ function indexAmbosOponente(jugador, enemigo) {
 function combate() {
     console.log('Se inicio combate con ', personajeEnemigo)  
 
-    for (let index = 0; index < ataqueJugador.length; index++) {
-        if(ataqueJugador[index] === ataqueEnemigo[index]) {
-            indexAmbosOponente(index, index)
+    if (ataqueJugador.length > 0 && ataqueEnemigo.length > 0) {
+        let ataqueJ = ataqueJugador[0]
+        let ataqueE = ataqueEnemigo[0]
+        
+        if(ataqueJ === ataqueE) {
+            console.log('EMPATE')
             crearMensaje("EMPATE")
-        } else if (ataqueJugador[index] === 'MAGIA' && ataqueEnemigo[index] === 'ESPADA') {
-            indexAmbosOponente(index, index)
+        } else if (
+            (ataqueJ === 'MAGIA' && ataqueE === 'ESPADA') ||
+            (ataqueJ === 'ESPADA' && ataqueE === 'DAGA') ||
+            (ataqueJ === 'DAGA' && ataqueE === 'MAGIA')
+        ) {
+            console.log('GANASTE')
             crearMensaje("GANASTE")
             personajeEnemigoObjeto.vida--
-            spanVidasEnemigo.innerHTML = personajeEnemigoObjeto.vida
-        } else if (ataqueJugador[index] ==='ESPADA' && ataqueEnemigo[index] === 'DAGA') {
-            indexAmbosOponente(index, index)
-            crearMensaje("GANASTE")
-            personajeEnemigoObjeto.vida--
-            spanVidasEnemigo.innerHTML = personajeEnemigoObjeto.vida--
-        } else if (ataqueJugador[index] === 'DAGA' && ataqueEnemigo[index] === 'MAGIA') {
-            indexAmbosOponente(index, index)
-            crearMensaje("GANASTE")
-            personajeEnemigoObjeto.vida--
-            spanVidasEnemigo.innerHTML = personajeEnemigoObjeto.vida--
         } else {
-            indexAmbosOponente(index, index)
+            console.log('PERDISTE')
             crearMensaje("PERDISTE")
             personajeJugadorObjeto.vida--
-            spanVidasJugador.innerHTML = personajeJugadorObjeto.vida
         }
+        
+        actualizarBarrasVidas()
+        console.log('Combate finalizado');
+
+        // Limpiar los arrays de ataque
+        ataqueJugador = []
+        ataqueEnemigo = []
+    } else {
+        console.log('No hay ataques para procesar');
     }
     revisarVidas()
 }
 
+// function combate() {
+//     console.log('Se inicio combate con ', personajeEnemigo)  
+
+//     // Asegurarse de que hay ataques para procesar
+//     if (ataqueJugador.length > 0 && ataqueEnemigo.length > 0) {
+//         // Procesar solo el último ataque
+//         //let index = ataqueJugador.length - 1;
+        
+//         if(ataqueJugador[index] === ataqueEnemigo[index]) {
+//             indexAmbosOponente(index, index)
+//             console.log('EMPATE')
+//             crearMensaje("EMPATE")
+//         } else if (
+//             (ataqueJugador[index] === 'MAGIA' && ataqueEnemigo[index] === 'ESPADA') ||
+//             (ataqueJugador[index] === 'ESPADA' && ataqueEnemigo[index] === 'DAGA') ||
+//             (ataqueJugador[index] === 'DAGA' && ataqueEnemigo[index] === 'MAGIA')
+//         ) {
+//             indexAmbosOponente(index, index)
+//             console.log('GANASTE')
+//             crearMensaje("GANASTE")
+//             personajeEnemigoObjeto.vida--
+//         } else {
+//             indexAmbosOponente(index, index)
+//             console.log('PERDISTE')
+//             crearMensaje("PERDISTE")
+//             personajeJugadorObjeto.vida--
+//         }
+        
+//         actualizarBarrasVidas()
+//         console.log('Combate finalizado');
+//     } else {
+//         console.log('No hay ataques para procesar');
+//     }
+//     revisarVidas()
+// }
+
+// function combate() {
+//     console.log('Se inicio combate con ', personajeEnemigo)  
+
+//     for (let index = 0; index < ataqueJugador.length; index++) {
+//         if(ataqueJugador[index] === ataqueEnemigo[index]) {
+//             indexAmbosOponente(index, index)
+//             crearMensaje("EMPATE")
+//             actualizarBarrasVidas()
+//         } else if (ataqueJugador[index] === 'MAGIA' && ataqueEnemigo[index] === 'ESPADA') {
+//             indexAmbosOponente(index, index)
+//             crearMensaje("GANASTE")
+//             personajeEnemigoObjeto.vida--
+//             //spanVidasEnemigo.innerHTML = personajeEnemigoObjeto.vida
+//             actualizarBarrasVidas()
+//         } else if (ataqueJugador[index] ==='ESPADA' && ataqueEnemigo[index] === 'DAGA') {
+//             indexAmbosOponente(index, index)
+//             crearMensaje("GANASTE")
+//             personajeEnemigoObjeto.vida--
+//             //spanVidasEnemigo.innerHTML = personajeEnemigoObjeto.vida--
+//             actualizarBarrasVidas()
+//         } else if (ataqueJugador[index] === 'DAGA' && ataqueEnemigo[index] === 'MAGIA') {
+//             indexAmbosOponente(index, index)
+//             crearMensaje("GANASTE")
+//             personajeEnemigoObjeto.vida--
+//             //spanVidasEnemigo.innerHTML = personajeEnemigoObjeto.vida--
+//             actualizarBarrasVidas()
+//         } else {
+//             indexAmbosOponente(index, index)
+//             crearMensaje("PERDISTE")
+//             personajeJugadorObjeto.vida--
+//             //spanVidasJugador.innerHTML = personajeJugadorObjeto.vida
+//             actualizarBarrasVidas()
+//         }
+//     }
+//     console.log('Combate finalizado');
+//     revisarVidas()
+// }
+
 function revisarVidas() {
-
-    ataqueJugador.length = 0
-    ataqueEnemigo.length = 0
-
     console.log('se esta revisando la vida de: ', personajeJugador, 'y ', personajeEnemigo)
-    console.log('Vida enemigo: ', (personajeEnemigoObjeto.vida))
-    console.log('Vida jugador: ', (personajeJugadorObjeto.vida))
     
-    // switch ((personajeEnemigoObjeto.vida),(personajeJugadorObjeto.vida)) {
-    //     case ((personajeJugadorObjeto.vida) <= 0) : {
-    //         crearMensajeFinal('Tu vida ha llegado a su fin...')
-    //         };
-            
-    //         break;
-    //     case ((personajeEnemigoObjeto.vida) > 0): {
-    //         secuenciaAtaque()
-    //     }
-    // }
+    if (!personajeJugadorObjeto || !personajeEnemigoObjeto) {
+        console.log('Uno o ambos objetos de personaje no están definidos');
+        return;
+    }
+    
+    console.log('Vida jugador: ', (personajeJugadorObjeto.vida))
+    console.log('Vida enemigo: ', (personajeEnemigoObjeto.vida))
 
     if (personajeEnemigoObjeto.vida <= 0) {
         console.log('Vida enemigo: ', (personajeEnemigoObjeto.vida))
         sectionSeleccionarAtaque.style.display = 'none'
+        barrasDeVida.style.display = 'none';
         crearMensajeFinal("Lograste sobrevivir a la batalla!")
-    } else if (personajeJugador.vida <= 0) {
+    } else if (personajeJugadorObjeto.vida <= 0) {
         sectionSeleccionarAtaque.style.display = 'none'
+        barrasDeVida.style.display = 'none';
         crearMensajeFinal('Tu vida ha llegado a su fin...')
-    } else if (personajeEnemigo.vida > 0 ){
+    } else if (personajeEnemigoObjeto.vida > 0 ){
         secuenciaAtaque()
     }
+}
 
+function actualizarBarrasVidas() {
+    console.log('Actualizando barras de vida');
+    console.log('Vida del jugador:', personajeJugadorObjeto.vida);
+    console.log('Vida del enemigo:', personajeEnemigoObjeto.vida);
+
+    // const vidaMaximaJugador = 5; // Ajusta esto según la vida máxima real de tu jugador
+    const vidaMaximaJugador = obtenerVidaMaximaObjetoPersonajeJugador(personajeJugador);
+    // const vidaMaximaEnemigo = 5; // Ajusta esto según la vida máxima real de tu enemigo
+    const vidaMaximaEnemigo = obtenerVidaMaximaPersonajeObjetoEnemigo(personajeEnemigo)
+    const porcentajeVidaJugador = (personajeJugadorObjeto.vida / vidaMaximaJugador) * 100;
+    const porcentajeVidaEnemigo = (personajeEnemigoObjeto.vida / vidaMaximaEnemigo) * 100;
+
+    // Actualizar barra del jugador
+    let barraJugador = document.querySelector('#barra-jugador div');
+    if (!barraJugador) {
+        barraJugador = document.createElement('div');
+        document.getElementById('barra-jugador').appendChild(barraJugador);
+    }
+    barraJugador.style.width = `${porcentajeVidaJugador}%`;
+
+    // Actualizar barra del enemigo
+    let barraEnemigo = document.querySelector('#barra-enemigo div');
+    if (!barraEnemigo) {
+        barraEnemigo = document.createElement('div');
+        document.getElementById('barra-enemigo').appendChild(barraEnemigo);
+    }
+    barraEnemigo.style.width = `${porcentajeVidaEnemigo}%`;
+
+    // Actualizar nombres y cantidades de vida
+    document.getElementById('nombre-jugador').textContent = personajeJugadorObjeto.nombre;
+    document.getElementById('vida-jugador-texto').textContent = `${personajeJugadorObjeto.vida}/${vidaMaximaJugador}`;
+
+    if (personajeEnemigoObjeto) {
+        document.getElementById('nombre-enemigo').textContent = personajeEnemigoObjeto.nombre;
+        document.getElementById('vida-enemigo-texto').textContent = `${personajeEnemigoObjeto.vida}/${vidaMaximaEnemigo}`;
+    }
+
+    barrasDeVida.style.display = 'flex';
+    console.log('Barras de vida actualizadas');
 }
 
 function crearMensaje(resultado) {
-    let nuevoAtaqueDelJugador = document.createElement('p')
-    let nuevoAtaqueDelEnemigo = document.createElement('p')
+    //let nuevoAtaqueDelJugador = document.createElement('p')
+    //let nuevoAtaqueDelEnemigo = document.createElement('p')
 
     sectionMensajes.innerHTML = resultado
-    nuevoAtaqueDelJugador.innerHTML = indexAtaqueJugador
-    nuevoAtaqueDelEnemigo.innerHTML = indexAtaqueEnemigo
+    //nuevoAtaqueDelJugador.innerHTML = indexAtaqueJugador
+    //nuevoAtaqueDelEnemigo.innerHTML = indexAtaqueEnemigo
 
-    ataquesDelJugador.appendChild(nuevoAtaqueDelJugador)
-    ataquesDelEnemigo.appendChild(nuevoAtaqueDelEnemigo)
+    //ataquesDelJugador.appendChild(nuevoAtaqueDelJugador)
+    //ataquesDelEnemigo.appendChild(nuevoAtaqueDelEnemigo)
 }
 
 function crearMensajeFinal(resultadoFinal) {
@@ -518,24 +688,24 @@ function pintarCanvas() {
 }
 
 function teclaIzq() {
-    //ataqueJugador.push('MAGIA')
-    console.log(ataqueJugador)
+    ataqueJugador.push('MAGIA')
     //indexAtaqueJugador = ataqueJugador['MAGIA']
-    combate(ataqueJugador.push('MAGIA'))
+    console.log(ataqueJugador)
+    //combate(ataqueJugador.push('MAGIA'))
 }
 
 function teclaArriba() {
-    //ataqueJugador.push('ESPADA')
-    console.log(ataqueJugador)
+    ataqueJugador.push('ESPADA')
     //indexAtaqueJugador = ataqueJugador['ESPADA']
-    combate(ataqueJugador.push('ESPADA'))
+    console.log(indexAtaqueJugador)
+    //combate(ataqueJugador.push('ESPADA'))
 }
 
 function teclaDer() {
-    //ataqueJugador.push('DAGA')
-    console.log(ataqueJugador)
+    ataqueJugador.push('DAGA')
     //indexAtaqueJugador = ataqueJugador['DAGA']
-    combate(ataqueJugador.push('DAGA'))
+    console.log(indexAtaqueJugador)
+    //combate(ataqueJugador.push('DAGA'))
 }
 
 function reiniciarJuego() {

@@ -20,22 +20,44 @@
             <h1 class="subtitulo-escenario">Te adentras cada vez mas en la oscuridad...</h1> 
             <p id="resultado-mazmorra"></p>
             <canvas id="escenario"></canvas>
+            
+            <div id="barras-vidas">
+                <div id="barra-jugador-container">
+                    <span id="nombre-jugador"></span>
+                    <div id="barra-jugador">
+                        <span id="vida-jugador-texto"></span>
+                    </div><span id="vida-jugador-texto"></span>
+                    </div>
+                <div id="barra-enemigo-container">
+                    <span id="nombre-enemigo"></span>
+                    <div id="barra-enemigo">
+                        <span id="vida-enemigo-texto"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- <div id="barras-vidas"> primera versiona barras de vida
+                style="display: none;" esto estaba en el div
+                <div id="barra-jugador"></div>
+                <div id="barra-enemigo"></div>
+            </div> -->
             <button id="boton-siguiente-mazmorra"></button>
         </section>
 
         <section id="seleccionar-ataque">
-            <h1 class="titulo">Comienza la Batalla</h1>
+            <h1 class="titulo-ataques">Comienza la Batalla</h1>
 
             <h2 class="subtitulo-ataques">Elige tu ataque:</h2>
 
             <div id='contenedorAtaques' class="tarjetas-ataques">
+
+            
 
             <!-- <button onmousedown="moverArriba()">Arriba</button>
             <div>
                 <button onmousedown="moverIzquierda()">Izquierda</button>
                 <button onmousedown="moverDerecha()">Derecha</button>
             </div> -->
-
             </div>
 
             <div id="mensajes">
@@ -46,7 +68,7 @@
                 </section>
             </div>
 
-            <div class="ataques">
+            <!-- <div class="ataques">
                 <div class="ataques-jugador">
                     <p id="vidas-jugador">0</p>
                     <p id="personaje-jugador"></p>
@@ -57,8 +79,9 @@
                     <p id="personaje-enemigo"></p>
                     <div id="ataques-del-enemigo"></div>
                 </div>
-            </div>
+            </div> -->
         </section>
+            
 
         <script src="./towercrawler.js"></script>
     </body>

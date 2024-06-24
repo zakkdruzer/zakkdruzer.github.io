@@ -27,6 +27,14 @@ body{
     align-items: center;
 }
 
+.titulo-ataques {
+    color:white;
+    font-size: 34px;
+    font-family: "MedievalSharp", cursive;
+    align-items: center;
+    margin: -5px;
+}
+
 .subtitulo-ataques {
     margin: 0px;
     color:white;
@@ -52,7 +60,7 @@ body{
   }
 
 .tarjeta-de-personaje {
-    background-image: url(./assets/crystalball2.png);
+    background-image: url(./assets/crystalball-alt.png);
     width: 308px;
     height: 333px;
     box-sizing: border-box;
@@ -173,6 +181,46 @@ body{
     width: 80px;
 }
 
+#barras-vidas {
+    display: flex;
+    gap: 100px;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+#barra-jugador-container, #barra-enemigo-container {
+    width: 45%;
+    text-align: center;
+}
+
+#barra-jugador, #barra-enemigo {
+    width: 100%;
+    height: 37px;
+    background-color: red;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#barra-jugador div, #barra-enemigo div {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.5s ease-in-out;
+}
+
+#nombre-jugador, #nombre-enemigo {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+#vida-jugador-texto, #vida-enemigo-texto {
+    font-size: 0.8em;
+    color: black;
+    margin-top: 5px;
+    display: block;
+}
+
 input {
     display: none;
 }
@@ -183,10 +231,8 @@ input:checked + label {
   }
 
 #mensajes {
-    width: 280px;
     background: #EEEEEE;
-    padding: 20px;
-    margin-top: 20px;
+    padding: 5px;
     border-radius: 20px;
     display: flex;
     align-items: center;
