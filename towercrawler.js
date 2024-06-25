@@ -358,57 +358,100 @@ function iniciarMapa() {
 }
 
 function secuenciaAtaque() {
-
-    //revisarVidas()
-
     botonSiguienteMazmorra.style.display = 'none'
     console.log('Iniciando secuencia de ataque contra enemigo: ', personajeEnemigo)
-    barrasDeVida.style.display = 'flex' // muestra barras de vida
+    barrasDeVida.style.display = 'flex'
     if (personajeEnemigoObjeto) {
-        actualizarBarrasVidas(); // Actualizar barras de vida solo si hay un enemigo
+        actualizarBarrasVidas();
     }
+    
     botones.forEach((boton) => {
-        boton.addEventListener('click', (e) => {
-            if (e.target.textContent === '🎇') {
-                ataqueJugador.push('MAGIA')
-                indexAtaqueJugador = ('MAGIA')
-                console.log('Ataque personaje elegido: ',ataqueJugador)
-                //boton.disabled = true   
-            } else if (e.target.textContent === '⚔') {
-                ataqueJugador.push('ESPADA')
-                indexAtaqueJugador = ('ESPADA')
-                console.log('Ataque personaje elegido: ',ataqueJugador)
-                //boton.disabled = true  
-            } else {
-                ataqueJugador.push('DAGA')
-                indexAtaqueJugador = ('DAGA')
-                console.log('Ataque personaje elegido: ',ataqueJugador)
-                //boton.disabled = true  
-            }
-            ataqueAleatorioEnemigo()
-        })
+        boton.addEventListener('click', realizarAtaque)
     })
 }
 
-function ataqueAleatorioEnemigo() {
-    console.log('Personaje enemigo elegido para ataque aleatorio', personajeEnemigo)
-    //console.log('Ataques enemigo', ataquesPersonajeEnemigo);
-    
-    let ataqueAleatorioEnemigo = aleatorio(0, ataqueEnemigo.length - 1)
-    
-    if (ataqueAleatorioEnemigo === 0) {
-        ataqueEnemigo.push('MAGIA')
-        indexAtaqueEnemigo = 'MAGIA'
-    } else if (ataqueAleatorioEnemigo === 1) {
-        ataqueEnemigo.push('ESPADA')
-        indexAtaqueEnemigo = 'ESPADA'
+function realizarAtaque(e) {
+    let ataque = ''
+    if (e.target.textContent === '🎇') {
+        ataque = 'MAGIA'
+    } else if (e.target.textContent === '⚔') {
+        ataque = 'ESPADA'
     } else {
-        ataqueEnemigo.push('DAGA')
-        indexAtaqueEnemigo = 'DAGA'
+        ataque = 'DAGA'
     }
-    console.log('Ataque aleatorio enemigo elegido: ', ataqueEnemigo)
-    iniciarPelea()
+    
+    ataqueJugador = [ataque] // Solo un ataque a la vez
+    console.log('Ataque personaje elegido: ', ataqueJugador)
+    
+    ataqueAleatorioEnemigo()
+    combate()
+    
+    // Deshabilitar botones temporalmente
+    botones.forEach(boton => boton.disabled = true)
+    setTimeout(() => {
+        botones.forEach(boton => boton.disabled = false)
+    }, 1000) // Habilitar después de 1 segundo
 }
+
+// function secuenciaAtaque() {
+
+//     //revisarVidas()
+
+//     botonSiguienteMazmorra.style.display = 'none'
+//     console.log('Iniciando secuencia de ataque contra enemigo: ', personajeEnemigo)
+//     barrasDeVida.style.display = 'flex' // muestra barras de vida
+//     if (personajeEnemigoObjeto) {
+//         actualizarBarrasVidas(); // Actualizar barras de vida solo si hay un enemigo
+//     }
+//     botones.forEach((boton) => {
+//         boton.addEventListener('click', (e) => {
+//             if (e.target.textContent === '🎇') {
+//                 ataqueJugador.push('MAGIA')
+//                 indexAtaqueJugador = ('MAGIA')
+//                 console.log('Ataque personaje elegido: ',ataqueJugador)
+//                 //boton.disabled = true   
+//             } else if (e.target.textContent === '⚔') {
+//                 ataqueJugador.push('ESPADA')
+//                 indexAtaqueJugador = ('ESPADA')
+//                 console.log('Ataque personaje elegido: ',ataqueJugador)
+//                 //boton.disabled = true  
+//             } else {
+//                 ataqueJugador.push('DAGA')
+//                 indexAtaqueJugador = ('DAGA')
+//                 console.log('Ataque personaje elegido: ',ataqueJugador)
+//                 //boton.disabled = true  
+//             }
+//             ataqueAleatorioEnemigo()
+//         })
+//     })
+// }
+
+function ataqueAleatorioEnemigo() {
+    let ataques = ['MAGIA', 'ESPADA', 'DAGA']
+    let ataqueAleatorio = ataques[Math.floor(Math.random() * ataques.length)]
+    ataqueEnemigo = [ataqueAleatorio] // Solo un ataque a la vez
+    console.log('Ataque aleatorio enemigo elegido: ', ataqueEnemigo)
+}
+
+// function ataqueAleatorioEnemigo() {
+//     console.log('Personaje enemigo elegido para ataque aleatorio', personajeEnemigo)
+//     //console.log('Ataques enemigo', ataquesPersonajeEnemigo);
+    
+//     let ataqueAleatorioEnemigo = aleatorio(0, ataqueEnemigo.length - 1)
+    
+//     if (ataqueAleatorioEnemigo === 0) {
+//         ataqueEnemigo.push('MAGIA')
+//         indexAtaqueEnemigo = 'MAGIA'
+//     } else if (ataqueAleatorioEnemigo === 1) {
+//         ataqueEnemigo.push('ESPADA')
+//         indexAtaqueEnemigo = 'ESPADA'
+//     } else {
+//         ataqueEnemigo.push('DAGA')
+//         indexAtaqueEnemigo = 'DAGA'
+//     }
+//     console.log('Ataque aleatorio enemigo elegido: ', ataqueEnemigo)
+//     iniciarPelea()
+// }
 
 // function ataqueAleatorioEnemigo() {
 //     console.log('Personaje enemigo elegido para ataque aleatorio', personajeEnemigo)
@@ -450,8 +493,8 @@ function combate() {
     console.log('Se inicio combate con ', personajeEnemigo)  
 
     if (ataqueJugador.length > 0 && ataqueEnemigo.length > 0) {
-        let ataqueJ = ataqueJugador[0]
-        let ataqueE = ataqueEnemigo[0]
+        let ataqueJ = ataqueJugador.shift() // Toma y elimina el primer ataque
+        let ataqueE = ataqueEnemigo.shift() // Toma y elimina el primer ataque
         
         if(ataqueJ === ataqueE) {
             console.log('EMPATE')
@@ -472,10 +515,6 @@ function combate() {
         
         actualizarBarrasVidas()
         console.log('Combate finalizado');
-
-        // Limpiar los arrays de ataque
-        ataqueJugador = []
-        ataqueEnemigo = []
     } else {
         console.log('No hay ataques para procesar');
     }
@@ -485,26 +524,22 @@ function combate() {
 // function combate() {
 //     console.log('Se inicio combate con ', personajeEnemigo)  
 
-//     // Asegurarse de que hay ataques para procesar
 //     if (ataqueJugador.length > 0 && ataqueEnemigo.length > 0) {
-//         // Procesar solo el último ataque
-//         //let index = ataqueJugador.length - 1;
+//         let ataqueJ = ataqueJugador[0]
+//         let ataqueE = ataqueEnemigo[0]
         
-//         if(ataqueJugador[index] === ataqueEnemigo[index]) {
-//             indexAmbosOponente(index, index)
+//         if(ataqueJ === ataqueE) {
 //             console.log('EMPATE')
 //             crearMensaje("EMPATE")
 //         } else if (
-//             (ataqueJugador[index] === 'MAGIA' && ataqueEnemigo[index] === 'ESPADA') ||
-//             (ataqueJugador[index] === 'ESPADA' && ataqueEnemigo[index] === 'DAGA') ||
-//             (ataqueJugador[index] === 'DAGA' && ataqueEnemigo[index] === 'MAGIA')
+//             (ataqueJ === 'MAGIA' && ataqueE === 'ESPADA') ||
+//             (ataqueJ === 'ESPADA' && ataqueE === 'DAGA') ||
+//             (ataqueJ === 'DAGA' && ataqueE === 'MAGIA')
 //         ) {
-//             indexAmbosOponente(index, index)
 //             console.log('GANASTE')
 //             crearMensaje("GANASTE")
 //             personajeEnemigoObjeto.vida--
 //         } else {
-//             indexAmbosOponente(index, index)
 //             console.log('PERDISTE')
 //             crearMensaje("PERDISTE")
 //             personajeJugadorObjeto.vida--
@@ -512,6 +547,10 @@ function combate() {
         
 //         actualizarBarrasVidas()
 //         console.log('Combate finalizado');
+
+//         // Limpiar los arrays de ataque
+//         ataqueJugador = []
+//         ataqueEnemigo = []
 //     } else {
 //         console.log('No hay ataques para procesar');
 //     }
@@ -558,28 +597,48 @@ function combate() {
 
 function revisarVidas() {
     console.log('se esta revisando la vida de: ', personajeJugador, 'y ', personajeEnemigo)
-    
-    if (!personajeJugadorObjeto || !personajeEnemigoObjeto) {
-        console.log('Uno o ambos objetos de personaje no están definidos');
-        return;
-    }
-    
     console.log('Vida jugador: ', (personajeJugadorObjeto.vida))
     console.log('Vida enemigo: ', (personajeEnemigoObjeto.vida))
 
     if (personajeEnemigoObjeto.vida <= 0) {
-        console.log('Vida enemigo: ', (personajeEnemigoObjeto.vida))
-        sectionSeleccionarAtaque.style.display = 'none'
-        barrasDeVida.style.display = 'none';
-        crearMensajeFinal("Lograste sobrevivir a la batalla!")
+        finalizarCombate("Lograste sobrevivir a la batalla!")
     } else if (personajeJugadorObjeto.vida <= 0) {
-        sectionSeleccionarAtaque.style.display = 'none'
-        barrasDeVida.style.display = 'none';
-        crearMensajeFinal('Tu vida ha llegado a su fin...')
-    } else if (personajeEnemigoObjeto.vida > 0 ){
-        secuenciaAtaque()
+        finalizarCombate('Tu vida ha llegado a su fin...')
     }
 }
+
+function finalizarCombate(mensaje) {
+    sectionSeleccionarAtaque.style.display = 'none'
+    barrasDeVida.style.display = 'none';
+    crearMensajeFinal(mensaje)
+    // Deshabilitar botones de ataque
+    botones.forEach(boton => boton.disabled = true)
+}
+
+// function revisarVidas() {
+//     console.log('se esta revisando la vida de: ', personajeJugador, 'y ', personajeEnemigo)
+    
+//     if (!personajeJugadorObjeto || !personajeEnemigoObjeto) {
+//         console.log('Uno o ambos objetos de personaje no están definidos');
+//         return;
+//     }
+    
+//     console.log('Vida jugador: ', (personajeJugadorObjeto.vida))
+//     console.log('Vida enemigo: ', (personajeEnemigoObjeto.vida))
+
+//     if (personajeEnemigoObjeto.vida <= 0) {
+//         console.log('Vida enemigo: ', (personajeEnemigoObjeto.vida))
+//         sectionSeleccionarAtaque.style.display = 'none'
+//         barrasDeVida.style.display = 'none';
+//         crearMensajeFinal("Lograste sobrevivir a la batalla!")
+//     } else if (personajeJugadorObjeto.vida <= 0) {
+//         sectionSeleccionarAtaque.style.display = 'none'
+//         barrasDeVida.style.display = 'none';
+//         crearMensajeFinal('Tu vida ha llegado a su fin...')
+//     } else if (personajeEnemigoObjeto.vida > 0 ){
+//         secuenciaAtaque()
+//     }
+// }
 
 function actualizarBarrasVidas() {
     console.log('Actualizando barras de vida');
