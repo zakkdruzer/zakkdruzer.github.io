@@ -7,6 +7,41 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        <section id="portada-titulo">
+            <p id="parrafo-presentacion">Bienvenido al mundo de</p>
+            <img src="./assets/portada.png"></img>
+            <button id="boton-comenzar"></button>
+            <button id="boton-instrucciones"></button>
+        </section>
+
+        <section id="instrucciones">
+            <p id="parrafo-instrucciones">Aquí una breve explicacion de como jugar:</p>
+            <p class="subtitulo-instrucciones">Dungeon Crawler es un juego de piedra,papel y tijera
+                pero con una tematica de fantasía en el que debes avanzar a travez de un calabozo
+                en el cual habitan todo tipo de monstruos.
+            </p>
+            <img src="./assets/debilidades.png"></img>
+            <p class="subtitulo-instrucciones">
+                El ataque Daga le ganará al ataque Espada, a su vez el ataque Espada le ganará al ataque Magia
+                y finalmente el ataque Magia le ganará al ataque Daga. Tu ataque se vera enfrentado a una jugada secreta
+                del oponente, lo que determinara quien gana o pierde una vida, 
+                si tu vida llega a cero es fin del juego pero si quedas con vida
+                y la vida del oponente llega a cero podras seguir explorando la mazmorra. 
+                ¿Te atreves a adentrarte a los oscuros y profundos parajes
+                de la mazmorra?
+            </p>
+            <button id="boton-siguiente"></button>
+        </section>
+
+        <section id="instrucciones-teclas">
+            <p class="subtitulo-instrucciones">Tambien puedes usar las teclas de direccion para seleccionar tus ataques:</p>
+            <img src="./assets/instrucciones-teclas.png"></img>
+            <p class="subtitulo-instrucciones">Presiona la tecla ← para seleccionar el ataque Magia, la tecla ↑ para 
+                seleccionar el ataque Espada o la tecla → para seleccionar el ataque Daga.
+            </p>
+            <button id="boton-volver"></button>
+        </section>
+
         <section id="seleccionar-pj">
             <h1 class="titulo">Bienvenido a la aventura 🔥🔥🔥</h1>
             <h2 class="subtitulo">Primero elige a tu personaje:</h2>
@@ -35,12 +70,6 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- <div id="barras-vidas"> primera versiona barras de vida
-                style="display: none;" esto estaba en el div
-                <div id="barra-jugador"></div>
-                <div id="barra-enemigo"></div>
-            </div> -->
             <button id="boton-siguiente-mazmorra"></button>
         </section>
 
@@ -50,7 +79,7 @@
             <h2 class="subtitulo-ataques">Elige tu ataque:</h2>
 
             <div id='contenedorAtaques' class="tarjetas-ataques">
-
+            </div>
             
 
             <!-- <button onmousedown="moverArriba()">Arriba</button>
@@ -58,30 +87,24 @@
                 <button onmousedown="moverIzquierda()">Izquierda</button>
                 <button onmousedown="moverDerecha()">Derecha</button>
             </div> -->
-            </div>
-
+        </section>
+        <section id="mostrar-mensajes">
             <div id="mensajes">
                 <p id="resultado">Mucha suerte</p>
-
-                <section id="reiniciar">
-                    <button id="boton-reiniciar"></button>
-                </section>
             </div>
-
-            <!-- <div class="ataques">
-                <div class="ataques-jugador">
-                    <p id="vidas-jugador">0</p>
-                    <p id="personaje-jugador"></p>
-                    <div id="ataques-del-jugador"></div>
-                </div>
-                <div class="ataques-enemigo">   
-                    <p id="vidas-enemigo">0</p>
-                    <p id="personaje-enemigo"></p>
-                    <div id="ataques-del-enemigo"></div>
-                </div>
-            </div> -->
         </section>
-            
+
+        <section id="fin-juego">
+            <img src="./assets/fin-juego.png"></img>
+            <p class="subtitulo-instrucciones">Gracias por jugar! Y agradezco al equipo de "Buena Onda Talks"
+                por otorgarnos la beca para tomar los cursos de Platzi y permitirnos practicar y mostrar lo aprendido
+                exponiendo nuestros proyectos y ayudandonos a expandir nuestros horizontes en el mundo de la proramacion!
+            </p>
+        </section>
+
+        <section id="reiniciar">
+            <button id="boton-reiniciar"></button>
+        </section>
 
         <script src="./towercrawler.js"></script>
     </body>
